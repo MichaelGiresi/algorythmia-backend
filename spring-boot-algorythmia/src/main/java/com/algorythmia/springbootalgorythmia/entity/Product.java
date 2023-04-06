@@ -25,6 +25,21 @@ public class Product {
     private String sku;
     @Column(name = "name")
     private String name;
+    
+    @Column(name = "size_small")
+    private int sizeSmall;
+
+    @Column(name = "size_medium")
+    private int sizeMedium;
+
+    @Column(name = "size_large")
+    private int sizeLarge;
+
+    @Column(name = "size_extra_large")
+    private int sizeExtraLarge;
+
+    @Column(name = "size_extra_extra_large")
+    private int sizeExtraExtraLarge;
     @Column(name = "description")
     private String description;
     @Column(name = "unit_price")
@@ -33,8 +48,8 @@ public class Product {
     private String imageUrl;
     @Column(name = "active")
     private boolean active;
-    @Column(name = "units_in_stock")
-    private int unitsInStock;
+//    @Column(name = "units_in_stock")
+//    private int unitsInStock;
     @Column(name = "date_created")
     @CreationTimestamp
     private Date dateCreated;

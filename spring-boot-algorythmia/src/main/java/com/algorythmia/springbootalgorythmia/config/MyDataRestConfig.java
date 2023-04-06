@@ -1,8 +1,7 @@
 package com.algorythmia.springbootalgorythmia.config;
 
 
-import com.algorythmia.springbootalgorythmia.entity.Product;
-import com.algorythmia.springbootalgorythmia.entity.ProductCategory;
+import com.algorythmia.springbootalgorythmia.entity.*;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
 import org.springframework.data.rest.webmvc.config.RepositoryRestConfigurer;
@@ -29,6 +28,18 @@ public class MyDataRestConfig implements RepositoryRestConfigurer {
                 .withItemExposure((metdata, httpMethods) -> httpMethods.disable(theUnsupportedActions))
                 .withCollectionExposure((metdata, httpMethods) -> httpMethods.disable(theUnsupportedActions));
 
+        config.getExposureConfiguration()
+                .forDomainType(ProductSize.class)
+                .withItemExposure((metdata, httpMethods) -> httpMethods.disable(theUnsupportedActions))
+                .withCollectionExposure((metdata, httpMethods) -> httpMethods.disable(theUnsupportedActions));
+
+        config.getExposureConfiguration()
+                .forDomainType(Order.class)
+                .withItemExposure((metdata, httpMethods) -> httpMethods.disable(theUnsupportedActions))
+                .withCollectionExposure((metdata, httpMethods) -> httpMethods.disable(theUnsupportedActions));
+
         cors.addMapping(config.getBasePath() + "/**");
+        config.exposeIdsFor(Product.class);
+        config.exposeIdsFor(Order.class);
     }
 }
