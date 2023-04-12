@@ -1,5 +1,7 @@
 package com.algorythmia.springbootalgorythmia.entity;
 
+import com.algorythmia.springbootalgorythmia.util.ProductCategoryDeserializer;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
@@ -16,9 +18,12 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
+
     private Long id;
+
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)
+//    @JsonDeserialize(using = ProductCategoryDeserializer.class)
     private ProductCategory category;
 
     @Column(name = "sku")
@@ -40,19 +45,23 @@ public class Product {
 
     @Column(name = "size_extra_extra_large")
     private int sizeExtraExtraLarge;
+
     @Column(name = "description")
     private String description;
+
     @Column(name = "unit_price")
     private BigDecimal unitPrice;
+
     @Column(name = "image_url")
     private String imageUrl;
+
     @Column(name = "active")
     private boolean active;
-//    @Column(name = "units_in_stock")
-//    private int unitsInStock;
+
     @Column(name = "date_created")
     @CreationTimestamp
     private Date dateCreated;
+
     @Column(name = "last_updated")
     @UpdateTimestamp
     private Date lastUpdated;

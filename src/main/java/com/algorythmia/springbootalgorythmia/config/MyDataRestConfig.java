@@ -15,31 +15,16 @@ public class MyDataRestConfig implements RepositoryRestConfigurer {
     @Override
     public void configureRepositoryRestConfiguration(RepositoryRestConfiguration config, CorsRegistry cors) {
 
-        HttpMethod[] theUnsupportedActions = {HttpMethod.PUT, HttpMethod.POST, HttpMethod.DELETE};
-
-        // disable Http Methods for Product: put, post and delete
-        config.getExposureConfiguration()
-                .forDomainType(Product.class)
-                .withItemExposure((metdata, httpMethods) -> httpMethods.disable(theUnsupportedActions))
-                .withCollectionExposure((metdata, httpMethods) -> httpMethods.disable(theUnsupportedActions));
-
-        config.getExposureConfiguration()
-                .forDomainType(ProductCategory.class)
-                .withItemExposure((metdata, httpMethods) -> httpMethods.disable(theUnsupportedActions))
-                .withCollectionExposure((metdata, httpMethods) -> httpMethods.disable(theUnsupportedActions));
-
-        config.getExposureConfiguration()
-                .forDomainType(ProductSize.class)
-                .withItemExposure((metdata, httpMethods) -> httpMethods.disable(theUnsupportedActions))
-                .withCollectionExposure((metdata, httpMethods) -> httpMethods.disable(theUnsupportedActions));
-
-        config.getExposureConfiguration()
-                .forDomainType(Order.class)
-                .withItemExposure((metdata, httpMethods) -> httpMethods.disable(theUnsupportedActions))
-                .withCollectionExposure((metdata, httpMethods) -> httpMethods.disable(theUnsupportedActions));
-
-        cors.addMapping(config.getBasePath() + "/**");
+        cors.addMapping(config.getBasePath() + "/**")
+                .allowedOrigins(theAllowedOrigins)
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                .allowedHeaders("Content-Type", "Accept", "X-Requested-With", "remember-me","Access-Control-Allow-Origin")
+                .allowCredentials(true)
+        .maxAge(3600);
         config.exposeIdsFor(Product.class);
         config.exposeIdsFor(Order.class);
+        config.exposeIdsFor(ProductCategory.class);
     }
 }
+
+
