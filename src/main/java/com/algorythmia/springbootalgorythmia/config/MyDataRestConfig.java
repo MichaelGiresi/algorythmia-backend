@@ -24,6 +24,10 @@ public class MyDataRestConfig implements RepositoryRestConfigurer {
         config.exposeIdsFor(Product.class);
         config.exposeIdsFor(Order.class);
         config.exposeIdsFor(ProductCategory.class);
+        config.exposeIdsFor(Customer.class);
+        config.exposeIdsFor(BillingAddress.class);
+        config.exposeIdsFor(ShippingAddress.class);
+
     }
 }
 

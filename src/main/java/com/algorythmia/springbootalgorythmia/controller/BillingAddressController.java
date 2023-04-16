@@ -22,7 +22,7 @@ public class BillingAddressController {
         return billingAddressRepository.findAll();
     }
 
-    @GetMapping("/")
+    @PostMapping("/")
     public ResponseEntity<String> createBillingAddress(@RequestBody BillingAddress billingAddress) {
         billingAddressRepository.save(billingAddress);
         return ResponseEntity.ok("BillingAddress created");}
