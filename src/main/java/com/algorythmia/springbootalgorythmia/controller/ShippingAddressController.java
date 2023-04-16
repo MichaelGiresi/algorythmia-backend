@@ -22,7 +22,7 @@ public class ShippingAddressController {
         return shippingAddressRepository.findAll();
     }
 
-    @GetMapping("/")
+    @PostMapping("/")
     public ResponseEntity<String> createShippingAddress(@RequestBody ShippingAddress shippingAddress) {
         shippingAddressRepository.save(shippingAddress);
         return ResponseEntity.ok("ShippingAddress created");}
