@@ -1,6 +1,7 @@
 package com.algorythmia.springbootalgorythmia.entity;
 
 import com.algorythmia.springbootalgorythmia.util.ProductCategoryDeserializer;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -24,6 +25,7 @@ public class Product {
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)
 //    @JsonDeserialize(using = ProductCategoryDeserializer.class)
+    @JsonBackReference
     private ProductCategory category;
 
     @Column(name = "sku")
