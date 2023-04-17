@@ -28,14 +28,15 @@ public class Order {
     @Column(name = "total_quantity")
     private int totalQuantity;
 
-    @Column(name = "billing_address_id")
-    private Long billingAddressId;
+//    @Column(name = "billing_address_id")
+//    private Long billingAddressId;
+    @ManyToOne
+    @JoinColumn(name = "customer_id", nullable= false)
+    private Customer customer;
 
-    @Column(name = "customer_id")
-    private Long customerId;
-
-    @Column(name = "shipping_address_id")
-    private Long shippingAddressId;
+    @ManyToOne
+    @JoinColumn(name = "shipping_address_id", nullable= false)
+    private ShippingAddress shippingAddressId;
 
     @Column (name = "status")
     private Boolean status;

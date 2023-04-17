@@ -19,13 +19,16 @@ public class OrderItem {
     @Column (name = "unit_price")
     private double unitPrice;
 
-    @Column (name = "order_id")
-    private int orderId;
+    @ManyToOne
+    @JoinColumn(name = "order_id", nullable = false)
+    private Order orderId;
 
-    @Column (name = "product_id")
-    private int productId;
+    @ManyToOne
+    @JoinColumn (name = "product_id", nullable = false)
+    private Product productId;
 
-    @Column (name = "size_id")
-    private int sizeId;
+    @ManyToOne
+    @JoinColumn (name = "size_id", nullable = false)
+    private ProductSize sizeId;
 
 }
