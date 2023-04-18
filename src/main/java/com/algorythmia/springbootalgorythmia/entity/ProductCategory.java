@@ -1,6 +1,7 @@
 package com.algorythmia.springbootalgorythmia.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -22,7 +23,8 @@ public class ProductCategory {
     private String categoryName;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "category")
-    @JsonManagedReference
+//    @JsonManagedReference
+    @JsonIgnore
     private Set<Product> products;
 
 }
