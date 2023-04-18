@@ -1,17 +1,24 @@
 package com.algorythmia.springbootalgorythmia.controller;
 
 import com.algorythmia.springbootalgorythmia.dao.ProductRepository;
+import com.algorythmia.springbootalgorythmia.dto.ProductDTO;
 import com.algorythmia.springbootalgorythmia.entity.Order;
 import com.algorythmia.springbootalgorythmia.entity.Product;
+import com.algorythmia.springbootalgorythmia.entity.ProductCategory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.ReflectionUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
@@ -32,25 +39,29 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateProductSizeQuantities(@PathVariable Long id, @RequestBody Map<String, Integer> sizeQuantities) {
+    public ResponseEntity<?> updateProduct(@PathVariable Long id, @RequestBody Map<String, Object> updates) throws IllegalAccessException, InvocationTargetException {
         Optional<Product> productOptional = productRepository.findById(id);
         if (productOptional.isPresent()) {
             Product existingProduct = productOptional.get();
 
-            if (sizeQuantities.containsKey("sizeSmall")) {
-                existingProduct.setSizeSmall(sizeQuantities.get("sizeSmall"));
-            }
-            if (sizeQuantities.containsKey("sizeMedium")) {
-                existingProduct.setSizeMedium(sizeQuantities.get("sizeMedium"));
-            }
-            if (sizeQuantities.containsKey("sizeLarge")) {
-                existingProduct.setSizeLarge(sizeQuantities.get("sizeLarge"));
-            }
-            if (sizeQuantities.containsKey("sizeExtraLarge")) {
-                existingProduct.setSizeExtraLarge(sizeQuantities.get("sizeExtraLarge"));
-            }
-            if (sizeQuantities.containsKey("sizeExtraExtraLarge")) {
-                existingProduct.setSizeExtraExtraLarge(sizeQuantities.get("sizeExtraExtraLarge"));
+            for (Map.Entry<String, Object> entry : updates.entrySet()) {
+                String fieldName = entry.getKey();
+                Object fieldValue = entry.getValue();
+                Field field = ReflectionUtils.findField(Product.class, fieldName);
+                if (field != null) {
+                    field.setAccessible(true);
+                    if (field.getType().equals(BigDecimal.class) && (fieldValue instanceof String || fieldValue instanceof Number)) {
+                        fieldValue = new BigDecimal(fieldValue.toString());
+                    } else if (field.getType().equals(ProductCategory.class) && fieldValue instanceof Map) {
+                        Map<String, Object> categoryMap = (Map<String, Object>) fieldValue;
+                        ProductCategory category = new ProductCategory();
+                        category.setId(((Number) categoryMap.get("id")).longValue());
+                        fieldValue = category;
+                    } else if (field.getType().equals(int.class) && fieldValue instanceof String) {
+                        fieldValue = Integer.parseInt((String) fieldValue);
+                    }
+                    field.set(existingProduct, fieldValue);
+                }
             }
 
             Product savedProduct = productRepository.save(existingProduct);
@@ -60,15 +71,36 @@ public class ProductController {
         }
     }
 
+//    @GetMapping("/{id}")
+//    public ResponseEntity<Product> getProductById(@PathVariable Long id) {
+//        Optional<Product> productOptional = productRepository.findById(id);
+//        if (productOptional.isPresent()) {
+//            return new ResponseEntity<>(productOptional.get(), HttpStatus.OK);
+//        } else {
+//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//        }
+//    }
+
+    @GetMapping("/")
+    public ResponseEntity<List<ProductDTO>> getAllProducts() {
+        List<Product> products = productRepository.findAll();
+        List<ProductDTO> productDTOs = products.stream()
+                .map(this::toProductDTO)
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(productDTOs, HttpStatus.OK);
+    }
     @GetMapping("/{id}")
-    public ResponseEntity<Product> getProductById(@PathVariable Long id) {
+    public ResponseEntity<ProductDTO> getProductById(@PathVariable Long id) {
         Optional<Product> productOptional = productRepository.findById(id);
         if (productOptional.isPresent()) {
-            return new ResponseEntity<>(productOptional.get(), HttpStatus.OK);
+            ProductDTO productDTO = toProductDTO(productOptional.get());
+            return new ResponseEntity<>(productDTO, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteProduct(@PathVariable Long id) {
@@ -79,5 +111,25 @@ public class ProductController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product with ID " + id + " not found.");
         }
     }
+    public ProductDTO toProductDTO(Product product) {
+        ProductDTO dto = new ProductDTO();
+        dto.setId(product.getId());
+        dto.setSku(product.getSku());
+        dto.setName(product.getName());
+        dto.setSizeSmall(product.getSizeSmall());
+        dto.setSizeMedium(product.getSizeMedium());
+        dto.setSizeLarge(product.getSizeLarge());
+        dto.setSizeExtraLarge(product.getSizeExtraLarge());
+        dto.setSizeExtraExtraLarge(product.getSizeExtraExtraLarge());
+        dto.setDescription(product.getDescription());
+        dto.setUnitPrice(product.getUnitPrice());
+        dto.setImageUrl(product.getImageUrl());
+        dto.setActive(product.isActive());
+        dto.setDateCreated(product.getDateCreated());
+        dto.setLastUpdated(product.getLastUpdated());
+        dto.setCategory(product.getCategory());
+        return dto;
+    }
+
 
 }

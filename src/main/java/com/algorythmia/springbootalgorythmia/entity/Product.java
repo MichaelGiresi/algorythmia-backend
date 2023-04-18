@@ -25,7 +25,7 @@ public class Product {
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)
 //    @JsonDeserialize(using = ProductCategoryDeserializer.class)
-    @JsonBackReference
+//    @JsonBackReference
     private ProductCategory category;
 
     @Column(name = "sku")
