@@ -11,7 +11,7 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 @Configuration
 public class MyDataRestConfig implements RepositoryRestConfigurer {
 
-    private String theAllowedOrigins = "http://localhost:3000";
+    private String theAllowedOrigins = "https://frolicking-pudding-12f017.netlify.app";
     @Override
     public void configureRepositoryRestConfiguration(RepositoryRestConfiguration config, CorsRegistry cors) {
 
@@ -29,6 +29,9 @@ public class MyDataRestConfig implements RepositoryRestConfigurer {
         config.exposeIdsFor(ShippingAddress.class);
 
     }
+
+
+
 }
 
 

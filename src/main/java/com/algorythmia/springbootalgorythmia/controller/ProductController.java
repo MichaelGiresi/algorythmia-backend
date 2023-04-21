@@ -20,7 +20,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "https://frolicking-pudding-12f017.netlify.app")
 @RestController
 @RequestMapping("/api/products")
 public class ProductController {
